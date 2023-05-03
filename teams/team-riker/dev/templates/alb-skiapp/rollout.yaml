@@ -1,3 +1,4 @@
+cat << EOF > teams/team-riker/dev/templates/alb-skiapp/rollout.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
@@ -6,7 +7,7 @@ metadata:
   labels:
     app: skiapp
 spec:
-  replicas: 20
+  replicas: 3
   revisionHistoryLimit: 1
   selector:
     matchLabels:
@@ -18,7 +19,7 @@ spec:
     spec:
       containers:
       - name: skiapp
-        image: sharepointoscar/skiapp:v2
+        image: sharepointoscar/skiapp:v1
         imagePullPolicy: Always
         ports:
         - name: http
@@ -27,10 +28,10 @@ spec:
         resources:
             requests:
                 memory: "64Mi"
-                cpu: "50m"
+                cpu: "250m"
             limits:
                 memory: "128Mi"
-                cpu: "100m"
+                cpu: "500m"
       {{ if .Values.spec.karpenterInstanceProfile }}
       nodeSelector: # <- add nodeselector, toleration and spread constraitns
         team: default
